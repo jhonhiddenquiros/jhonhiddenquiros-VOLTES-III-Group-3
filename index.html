@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLTIST V · Legacy Portfolio</title>
+    <style>
+        :root {
+            /* VOLTES V: LEGACY COLOR PALETTE */
+            --red: #e6212a;
+            --red-glow: rgba(230, 33, 42, 0.6);
+            --blue: #0066cc;
+            --blue-glow: rgba(0, 102, 204, 0.5);
+            --gold: #ffcc00;
+            --gold-glow: rgba(255, 204, 0, 0.6);
+            --yellow: #ffdd00;
+            --green: #00a850;
+            --purple: #7b2cbf;
+            --purple-glow: rgba(123, 44, 191, 0.4);
+            --silver: #e0e0e0;
+            --white-bright: #ffffff;
+            --dark: #050510;
+            --dark-accent: #0f0f2a;
+            --space-gradient: radial-gradient(circle at top, #1a1a40 0%, #000000 65%, #050510 100%);
+            --energy-glow: linear-gradient(90deg, var(--red), var(--gold), var(--blue), var(--gold), var(--red));
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--space-gradient);
+            color: var(--silver);
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* === ENERGY / NEBULA BACKGROUND — VOLTES V STYLE === */
+        .nebula-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            overflow: hidden;
+        }
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: nebulaPulse 18s infinite ease-in-out;
+        }
+        .nebula:nth-child(1) {
+            width: 500px; height: 500px;
+            background: var(--red);
+            top: 5%; left: 5%;
+            animation-duration: 16s;
+            box-shadow: 0 0 100px var(--red-glow);
+        }
+        .nebula:nth-child(2) {
+            width: 450px; height: 450px;
+            background: var(--blue);
+            top: 55%; left: 65%;
+            animation-duration: 20s;
+            animation-delay: -3s;
+            box-shadow: 0 0 100px var(--blue-glow);
+        }
+        .nebula:nth-child(3) {
+            width: 380px; height: 380px;
+            background: var(--gold);
+            top: 30%; left: 55%;
+            animation-duration: 22s;
+            animation-delay: -7s;
+            box-shadow: 0 0 90px var(--gold-glow);
+            opacity: 0.4;
+        }
+        .nebula:nth-child(4) {
+            width: 420px; height: 420px;
+            background: var(--purple);
+            top: 65%; left: 15%;
+            animation-duration: 19s;
+            animation-delay: -11s;
+            box-shadow: 0 0 100px var(--purple-glow);
+        }
+        @keyframes nebulaPulse {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            33% { transform: translate(40px, -50px) scale(1.15); opacity: 0.7; }
+            66% { transform: translate(-30px, 40px) scale(0.9); opacity: 0.55; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+        }
+        .starfield {
+            position: fixed; top:0; left:0; width:100%; height:100%; z-index: -2;
+            background: 
+                radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.7), transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: starDrift 60s linear infinite;
+        }
+        @keyframes starDrift {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 200px; }
+        }
+        .particles {
+            position: fixed; top:0; left:0; width:100%; height:100%; z-index: -1;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: rise 12s linear infinite;
+            box-shadow: 0 0 8px currentColor;
+        }
+        @keyframes rise {
+            0% { transform: translateY(100vh) scale(0.5); opacity:0; }
+            20% { opacity:1; }
+            80% { opacity:1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity:0; }
+        }
+        .cursor-glow {
+            position: fixed; left:0; top:0; z-index: 0;
+            width: 500px; height: 500px; border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(255,204,0,0.25) 0, rgba(230,33,42,0.15) 40%, transparent 70%);
+            filter: blur(30px);
+            will-change: transform;
+        }
+        /* === NAVIGATION — VOLTES V STYLE === */
+        nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3rem;
+            border-bottom: 2px solid transparent;
+            border-image: var(--energy-glow) 1;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            backdrop-filter: blur(15px);
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: var(--energy-glow);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: energyFlow 4s linear infinite;
+            text-shadow: none;
+        }
+        @keyframes energyFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 5px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        .nav-pill {
+            position: absolute;
+            top: 5px; left: 0;
+            height: calc(100% - 10px);
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            box-shadow: 0 0 15px var(--gold-glow), 0 0 25px var(--red-glow);
+            transition: transform 0.35s ease, width 0.35s ease;
+            z-index: 0;
+        }
+        .nav-tabs a {
+            position: relative;
+            z-index: 1;
+            padding: 0.7rem 1.1rem;
+            border-radius: 2px;
+            color: var(--silver);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .nav-tabs a:hover {
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+        .nav-tabs a.active {
+            color: #000;
+            font-weight: 800;
+        }
+        .section-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: 85vh;
+        }
+        .tab-content {
+            position: relative;
+            min-height: 600px;
+        }
+        .tab-pane {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.4s ease;
+        }
+        .tab-pane.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            position: relative;
+        }
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1.7fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .member-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+        .picture-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        @keyframes floatSoft {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0); }
+        }
+        .picture-float {
+            animation: floatSoft 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 25px var(--gold-glow), 0 0 50px var(--red-glow); }
+            50% { box-shadow: 0 0 45px var(--gold), 0 0 90px var(--red-glow); }
+            100% { box-shadow: 0 0 25px var(--gold-glow), 0 0 50px var(--red-glow); }
+        }
+        .ring-outer {
+            position: absolute;
+            top: -15px; left: -15px;
+            width: calc(100% + 30px); height: calc(100% + 30px);
+            border: 3px solid transparent;
+            border-image: var(--energy-glow) 1;
+            border-radius: 4px;
+            animation: rotateRing 12s linear infinite;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 10px var(--gold-glow));
+        }
+        @keyframes rotateRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .picture-frame {
+            width: 100%; 
+            height: 280px;
+            border-radius: 4px;
+            padding: 4px;
+            background: var(--energy-glow);
+            background-size: 300% 300%;
+            animation: energyFlow 5s linear infinite, pulseGlow 3s ease-in-out infinite;
+            overflow: hidden;
+        }
+        .picture-inner {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #000000, var(--dark-accent));
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .profile-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.6s ease;
+        }
+        .picture-frame:hover .profile-img {
+            transform: scale(1.08);
+        }
+        .home-text h3 {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .home-text h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            color: var(--white-bright);
+            text-transform: uppercase;
+        }
+        .home-text h1 span {
+            background: var(--energy-glow);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: energyFlow 4s linear infinite;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+        .tagline {
+            color: var(--silver);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .bio-text {
+            color: var(--silver);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 2px;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            color: #000;
+            border-image: var(--energy-glow) 1;
+            box-shadow: 0 0 20px var(--gold-glow), 0 0 30px var(--red-glow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px var(--gold), 0 0 60px var(--red-glow);
+        }
+        .btn-outline {
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+        .btn-outline:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 25px var(--gold-glow);
+        }
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            color: var(--white-bright);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .section-title span {
+            color: var(--gold);
+            text-shadow: 0 0 12px var(--gold-glow);
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--red), transparent);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 204, 0, 0.2);
+            border-radius: 4px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .card:hover {
+            transform: translateX(8px);
+            border-color: var(--gold);
+            box-shadow: -6px 0 25px var(--gold-glow), 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .card h3 {
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card .meta {
+            color: var(--silver);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .card p {
+            color: var(--silver);
+            line-height: 1.8;
+        }
+        .card ul {
+            list-style: none;
+            color: var(--silver);
+            margin-top: 0.8rem;
+        }
+        .card ul li {
+            margin-bottom: 0.6rem;
+            line-height: 1.7;
+        }
+        .card ul li::before {
+            content: "⚡";
+            color: var(--gold);
+            margin-right: 0.5rem;
+        }
+        .detail-row {
+            display: flex;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+            transition: all 0.25s ease;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            color: var(--silver);
+        }
+        .detail-row:hover {
+            background: rgba(255, 204, 0, 0.08);
+            transform: translateX(5px);
+        }
+        .detail-row strong {
+            min-width: 140px;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .socials {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-icon {
+            width: 42px; height: 42px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .social-icon:hover {
+            background: var(--gold);
+            color: #000;
+            transform: scale(1.15);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 2px solid transparent;
+            border-image: var(--energy-glow) 1;
+            color: var(--silver);
+            margin-top: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+        h4 {
+            color: var(--gold);
+            margin: 1rem 0 0.5rem;
+            text-transform: uppercase;
+        }
+        .member-layout .picture-frame {
+            height: 400px;
+        }
+        @media (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .grid-layout, .member-layout {
+                grid-template-columns: 1fr;
+            }
+            .section-container {
+                padding: 2rem 1.2rem;
+            }
+            .home-text h1 {
+                font-size: 2rem;
+            }
+            .picture-frame {
+                height: 220px;
+            }
+            .member-layout .picture-frame {
+                height: 340px;
+            }
+            .nebula {
+                filter: blur(40px);
+                width: 280px !important;
+                height: 280px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Nebula/Starfield Background — Voltes V Style -->
+    <div class="nebula-container">
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+    </div>
+    <div class="starfield"></div>
+    <div class="particles" id="particles"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <nav>
+        <div class="logo">VOLTES III · LEGACY</div>
+        <div class="nav-tabs" id="mainTabs">
+            <span class="nav-pill" id="navPill"></span>
+            <a href="#profile" class="active" data-tab="profile">Home</a>
+            <a href="#salazar" data-tab="salazar">Salazar</a>
+            <a href="#quiros" data-tab="quiros">Quiros</a>
+            <a href="#ibatuan" data-tab="ibatuan">Ibatuan</a>
+            <a href="#contact" data-tab="contact">Contact</a>
+        </div>
+    </nav>
+    <div class="section-container">
+        <div class="tab-content">
+            <!-- HOME / PROFILE TAB -->
+            <div class="tab-pane active" id="profile">
+                <div class="grid-layout">
+                    <div class="picture-container picture-float">
+                        <div class="ring-outer"></div>
+                        <div class="picture-frame">
+                            <div class="picture-inner">
+                               <img src="images/home.jpg" alt="VOLTES III" class="profile-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="home-text">
+                        <h3>Welcome to the Legacy</h3>
+                        <h1>We are <span>VOLTES III</span></h1>
+                        <p class="tagline">IT Students · Developers · Creators</p>
+                        <p class="bio-text">
+                            Three forces united — building skills in web development, programming, and digital design. 
+                            Curious, courageous, and determined. We learn, we create, we rise together.
+                        </p>
+                        <div class="btn-group">
+                            <a href="#salazar" class="btn btn-primary" data-switch="salazar">Meet the Team</a>
+                            <a href="#contact" class="btn btn-outline" data-switch="contact">Contact Us</a>
+                        </div>
+                        <div class="socials">
+                            <a href="#" class="social-icon">in</a>
+                            <a href="#" class="social-icon">ⓖ</a>
+                            <a href="#" class="social-icon">f</a>
+                            <a href="#" class="social-icon">t</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SALAZAR TAB -->
+            <div class="tab-pane" id="salazar">
+                <div class="member-layout">
+                    <div class="picture-container picture-float">
+                        <div class="ring-outer"></div>
+                        <div class="picture-frame">
+                            <div class="picture-inner">
+                                <img src="images/salazar.jpg" alt="Salazar" class="profile-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="section-title"><span>Salazar,</span> Jhon Daniel V.</h2>
+                        <div class="card">
+                            <h3>⚡ About Me</h3>
+                            <p>
+                                Hello! I am Salazar, Jhon Daniel Villanueva — an aspiring IT student from San Manuel, Tarlac. Curious, cheerful, and determined — constantly learning to turn ideas into reality.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h3>🎯 Hobbies & Interests</h3>
+                            <ul>
+                                <li>Listening to different genres of music</li>
+                                <li>Playing online and offline games</li>
+                                <li>Traveling to different places</li>
+                                <li>Digital editing of photos and videos</li>
+                                <li>Photography</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3>📋 Personal Details</h3>
+                            <div class="detail-row"><strong>Full Name:</strong> Salazar, Jhon Daniel V.</div>
+                            <div class="detail-row"><strong>Email:</strong> salazarjd209@gmail.com</div>
+                            <div class="detail-row"><strong>Birthday:</strong> September 18, 2005</div>
+                            <div class="detail-row"><strong>Age:</strong> 21 years old</div>
+                            <div class="detail-row"><strong>Location:</strong> Salcedo, San Manuel, Tarlac</div>
+                            <div class="detail-row"><strong>Religion:</strong> Roman Catholic</div>
+                            <div class="detail-row"><strong>Status:</strong> IT Student</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- QUIROS TAB -->
+            <div class="tab-pane" id="quiros">
+                <div class="member-layout">
+                    <div class="picture-container picture-float">
+                        <div class="ring-outer"></div>
+                        <div class="picture-frame">
+                            <div class="picture-inner">
+                               <img src="images/quiros.jpg" alt="Quiros" class="profile-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="section-title"><span>Quiros,</span> Jhon Hidden D.</h2>
+                        <div class="card">
+                            <h3>⚡ About Me</h3>
+                            <p>
+                                Dedicated IT student at the University of Eastern Pangasinan — building modern, responsive websites and applications. Passionate about creating things that matter.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h3>🎓 Education</h3>
+                            <div class="meta">Bachelor of Science in Information Technology — 2026 to 2027</div>
+                            <ul>
+                                <li><strong>University of Eastern Pangasinan</strong></li>
+                                <li>Focus: Web Systems, Database Design, Object-Oriented Programming</li>
+                            </ul>
+                            <h4>Senior High School</h4>
+                            <div class="meta">HUMSS Strand — 2024 to 2026</div>
+                            <ul>
+                                <li><strong>Academy of St. Anthony of Padua</strong></li>
+                                <li>Communication, relations, problem-solving</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3>📋 Contact Details</h3>
+                            <div class="detail-row"><strong>Full Name:</strong> Quiros, Jhon Hidden D.</div>
+                            <div class="detail-row"><strong>Email:</strong> hiddenjhon449@gmail.com</div>
+                            <div class="detail-row"><strong>Phone:</strong> +63 912 077 5950</div>
+                            <div class="detail-row"><strong>Location:</strong> Manaoag, Pangasinan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- IBATUAN TAB -->
+            <div class="tab-pane" id="ibatuan">
+                <div class="member-layout">
+                    <div class="picture-container picture-float">
+                        <div class="ring-outer"></div>
+                        <div class="picture-frame">
+                            <div class="picture-inner">
+                                <img src="images/ibatuan.jpg" alt="Ibatuan" class="profile-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="section-title"><span>Ibatuan,</span> Carl</h2>
+                        <div class="card">
+                            <h3>⚡ About Me</h3>
+                            <p>
+                                Hi! I'm Carl — a student, learner, and curious thinker. I enjoy coding, gaming, and exploring new technologies. Always building, always growing.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h3>🎯 What I Do</h3>
+                            <ul>
+                                <li>Enjoys coding and building digital projects</li>
+                                <li>Plays online games — strategy and competitive</li>
+                                <li>Always learning new technologies and tools</li>
+                                <li>Exploring web development and programming</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3>📌 My Goals & Focus</h3>
+                            <div class="detail-row"><strong>Current Focus:</strong> Learning coding & development</div>
+                            <div class="detail-row"><strong>Approach:</strong> Learn by doing — building real projects</div>
+                            <div class="detail-row"><strong>Mindset:</strong> Curious · Consistent · Creative</div>
+                            <div class="detail-row"><strong>Aspirations:</strong> To become a skilled developer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CONTACT TAB -->
+            <div class="tab-pane" id="contact">
+                <h2 class="section-title">All <span>Contact</span> Information</h2>
+                <div class="card">
+                    <h3>⚡ Salazar, Jhon Daniel V.</h3>
+                    <div class="detail-row"><strong>Email:</strong> salazarjd209@gmail.com</div>
+                    <div class="detail-row"><strong>Location:</strong> Salcedo, San Manuel, Tarlac</div>
+                    <div class="detail-row"><strong>Birthday:</strong> September 18, 2005</div>
+                    <div class="detail-row"><strong>Age:</strong> 21</div>
+                    <div class="detail-row"><strong>Religion:</strong> Roman Catholic</div>
+                </div>
+                <div class="card">
+                    <h3>⚡ Quiros, Jhon Hidden D.</h3>
+                    <div class="detail-row"><strong>Email:</strong> hiddenjhon449@gmail.com</div>
+                    <div class="detail-row"><strong>Phone:</strong> +63 912 077 5950</div>
+                    <div class="detail-row"><strong>Location:</strong> Manaoag, Pangasinan</div>
+                    <div class="detail-row"><strong>Education:</strong> University of Eastern Pangasinan</div>
+                    <div class="detail-row"><strong>GitHub:</strong> github.com/yourusername</div>
+                </div>
+                <div class="card">
+                    <h3>⚡ Ibatuan, Carl</h3>
+                    <div class="detail-row"><strong>Role:</strong> Student & Developer</div>
+                    <div class="detail-row"><strong>Focus:</strong> Coding & Web Development</div>
+                    <div class="detail-row"><strong>Hobbies:</strong> Gaming · Coding · Learning</div>
+                    <div class="detail-row"><strong>Goal:</strong> Build impactful digital solutions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2026 VOLTIST III · Legacy — Salazar · Quiros · Ibatuan — All Rights Reserved</p>
+    </footer>
+    <script>
+        // === PARTICLES — Voltes III Colors ===
+        const pContainer = document.getElementById('particles');
+        const colors = ['#ffcc00', '#e6212a', '#0066cc', '#ffffff', '#7b2cbf'];
+        for (let i = 0; i < 60; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 7 + 2;
+            p.style.width = p.style.height = `${size}px`;
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.opacity = Math.random() * 0.6 + 0.3;
+            p.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            p.style.animationDelay = `${Math.random() * 15}s`;
+            pContainer.appendChild(p);
+        }
+        // === CURSOR GLOW ===
+        const glow = document.getElementById('cursorGlow');
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        let targetX = x;
+        let targetY = y;
+        const FOLLOW = 0.14;
+        document.addEventListener('mousemove', e => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+        function tick() {
+            x += (targetX - x) * FOLLOW;
+            y += (targetY - y) * FOLLOW;
+            glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+            requestAnimationFrame(tick);
+        }
+        tick();
+        // === TAB SYSTEM ===
+        const tabs = document.querySelectorAll('#mainTabs a');
+        const panes = document.querySelectorAll('.tab-pane');
+        const pill = document.getElementById('navPill');
+        function movePill(tab) {
+            pill.style.width = `${tab.offsetWidth}px`;
+            pill.style.transform = `translateX(${tab.offsetLeft}px)`;
+        }
+        function showTab(tabId) {
+            tabs.forEach(tab => {
+                const isActive = tab.dataset.tab === tabId;
+                tab.classList.toggle('active', isActive);
+                if (isActive) movePill(tab);
+            });
+            panes.forEach(pane => {
+                pane.classList.toggle('active', pane.id === tabId);
+            });
+        }
+        tabs.forEach(tab => {
+            tab.addEventListener('click', e => {
+                e.preventDefault();
+                showTab(tab.dataset.tab);
+            });
+        });
+        document.querySelectorAll('[data-switch]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                showTab(btn.dataset.switch);
+            });
+        });
+        window.addEventListener('load', () => {
+            const activeTab = document.querySelector('#mainTabs a.active');
+            if (activeTab) movePill(activeTab);
+        });
+        window.addEventListener('resize', () => {
+            const activeTab = document.querySelector('#mainTabs a.active');
+            if (activeTab) movePill(activeTab);
+        });
+    </script>
+</body>
+</html>s
